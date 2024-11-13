@@ -1,53 +1,60 @@
-import Description from "./Description/Description.jsx"
-import Options from "./Options/Options.jsx"
-import Feedback from "./Feedback/Feedback.jsx"
-
+import { useEffect, useState } from "react";
+import Description from "./Description/Description.jsx";
+import Options from "./Options/Options.jsx";
+import Feedback from "./Feedback/Feedback.jsx";
 
 function App() {
+  const [optionsList, setOptionsList] = useState(() => {
+    const localFeedback = window.localStorage.getItem("options");
+      return localFeedback
+        ? JSON.parse(localFeedback)
+        : { good: 0, neutral: 0, bad: 0 };
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("options", JSON.stringify(optionsList));
+  }, [optionsList]);
+
+  const resetFeedback = () => {
+    setOptionsList({ good: 0, neutral: 0, bad: 0 });
+  };
+
+  const totalFeedback =
+    optionsList.good + optionsList.neutral + optionsList.bad;
+  const positiveFeedback = Math.round((optionsList.good / totalFeedback) * 100);
+
+  const updateFeedback = (feedbackType) => {
+    setOptionsList({
+      ...optionsList,
+      [feedbackType]: optionsList[feedbackType] + 1,
+    });
+  };
+
+  const Notification = () => {
+    return <p>No feedback yet</p>;
+  };
+
   return (
     <>
-      <Description/>
-      <Options />
-      <Feedback />
+      <Description />
+      <Options
+        resetFeedback={resetFeedback}
+        updateFeedback={updateFeedback}
+        total={totalFeedback}
+      />
+      {totalFeedback ? (
+        <Feedback
+          positive={positiveFeedback}
+          total={totalFeedback}
+          good={optionsList.good}
+          neutral={optionsList.neutral}
+          bad={optionsList.bad}
+        />
+      ) : (
+        <Notification />
+      )}
     </>
-)
+  );
 }
 
-export default App
-
-
-
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
+export default App;
