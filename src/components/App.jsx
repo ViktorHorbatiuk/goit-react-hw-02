@@ -1,10 +1,11 @@
 import Description from "./Description/Description.jsx"
+import Options from "./Options/Options.jsx"
 
 function App() {
   return (
     <>
       <Description/>
-
+       <Options />
     </>
 )
 }
