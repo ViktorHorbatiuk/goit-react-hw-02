@@ -3,14 +3,17 @@
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
+    gap: 10px;
 }
 
 .title {
+    text-align: center;
     font-size: 36px;
-    font-weight: bold;
     color: black;
 }
 
 .text {
     color: black;
+    text-align: center;
+    font-weight: bold;
 }
